@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Packages\Pages\Delete.cshtml.cs" />
+    <Compile Remove="Areas\Packages\Pages\Details.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Packages\Pages\Delete.cshtml" />
+    <Content Remove="Areas\Packages\Pages\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\CleanArchitectureSample.Application\CleanArchitectureSample.Application.csproj" />
+    <ProjectReference Include="..\..\Persistence\CleanArchitectureSample.Persistence.EF\CleanArchitectureSample.Persistence.EF.csproj" />
+  </ItemGroup>
+
+</Project>

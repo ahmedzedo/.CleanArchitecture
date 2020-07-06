@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Packages\DTOs\" />
+    <Folder Include="Packages\Interfaces\" />
+    <Folder Include="Packages\Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CleanArchitectureSample.Domain\CleanArchitectureSample.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
