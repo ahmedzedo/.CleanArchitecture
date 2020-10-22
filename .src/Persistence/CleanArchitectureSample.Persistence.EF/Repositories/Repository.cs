@@ -35,7 +35,12 @@ namespace CleanArchitectureSample.Persistence.EF.Repositories
         /// <summary>
         /// Gets the db set.
         /// </summary>
-        protected DbSet<T> DbSet { get; }
+        protected internal DbSet<T> DbSet { get; }
+
+        /// <summary>
+        /// Gets or Sets the query.
+        /// </summary>
+        protected internal IQueryable<T> Query { get; private set; }
         #endregion
 
         #region Write Methods 
@@ -256,7 +261,7 @@ namespace CleanArchitectureSample.Persistence.EF.Repositories
 
         public virtual bool Any(Expression<Func<T, bool>> filter)
         {
-            return  DbSet.Any(filter);
+            return DbSet.Any(filter);
         }
 
         public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
@@ -330,7 +335,7 @@ namespace CleanArchitectureSample.Persistence.EF.Repositories
        Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
             IQueryable<T> query = DbSet.AsNoTracking();
-            
+
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -440,12 +445,7 @@ namespace CleanArchitectureSample.Persistence.EF.Repositories
                 query = query.IncludeMultiple(includeProperties);
             }
 
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-
-            return query.ToList();
+            return orderBy != null ? orderBy(query).ToList() : query.ToList();
         }
 
         /// <summary>
@@ -698,6 +698,147 @@ namespace CleanArchitectureSample.Persistence.EF.Repositories
 
             return (await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync(), totalCount);
         }
-    } 
-    #endregion
+
+        #endregion
+
+        /// <summary>
+        /// The get all.
+        /// </summary>
+        /// <returns>The result.</returns>
+        public IRepository<T> GetAll()
+        {
+            this.Query = this.DbSet.AsNoTracking();
+            return this;
+        }
+
+        /// <summary>
+        /// The where.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>The result.</returns>
+        public IRepository<T> Where(Expression<Func<T, bool>> filter)
+        {
+            if (filter != null)
+            {
+                this.Query = this.Query.Where(filter);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// The where.
+        /// </summary>
+        /// <param name="filters">The filters.</param>
+        /// <returns>The result.</returns>
+        public IRepository<T> Where(params Expression<Func<T, bool>>[] filters)
+        {
+            if (filters != null && filters.Count() > 0)
+            {
+                foreach (var filter in filters)
+                {
+                    this.Query = this.Query.Where(filter);
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// The where.
+        /// </summary>
+        /// <param name="filters">The filters.</param>
+        /// <returns>The result.</returns>
+        public IRepository<T> Where(IEnumerable<Expression<Func<T, bool>>> filters)
+        {
+            if (filters != null && filters.Count() > 0)
+            {
+                foreach (var filter in filters)
+                {
+                    this.Query = this.Query.Where(filter);
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// The order by.
+        /// </summary>
+        /// <param name="keySelector">The key selector.</param>
+        /// <returns>The result.</returns>
+        public IRepository<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector) 
+        {
+            if (keySelector != null)
+            {
+                this.Query = this.Query.OrderBy(keySelector);
+            }
+
+            return this;
+
+        }
+
+        /// <summary>
+        /// The order by descending.
+        /// </summary>
+        /// <param name="keySelector">The key selector.</param>
+        /// <returns>The result.</returns>
+        public IRepository<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
+        {
+            if (keySelector != null)
+            {
+                this.Query = this.Query.OrderByDescending(keySelector);
+            }
+
+            return this;
+
+        }
+
+        /// <summary>
+        /// The include.
+        /// </summary>
+        /// <param name="includeProperties">The include properties.</param>
+        /// <returns>The result.</returns>
+        public IRepository<T> Include<TKey>(params Expression<Func<T, object>>[] includeProperties)
+        {
+            if (includeProperties != null && includeProperties.Any())
+            {
+                Query = Query.IncludeMultiple(includeProperties);
+            }
+
+            return this;
+
+        }
+
+        /// <summary>
+        /// The to list.
+        /// </summary>
+        /// <returns>The result.</returns>
+        public IEnumerable<T> ToList()
+        {
+            var result = this.Query.ToList();
+            Query = null;
+
+            return result;
+        }
+
+        /// <summary>
+        /// The to pages list.
+        /// </summary>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <returns>The result.</returns>
+        public (IEnumerable<T>, int totalCount) ToPagesList(int pageIndex, int pageSize)
+        {
+            int totalCount = this.Query.Count();
+            var result =  this.Query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+           
+            Query = null;
+
+            return (result,totalCount);
+        }
+
+
+
+
+    }
+
 }
+

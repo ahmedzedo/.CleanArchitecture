@@ -271,5 +271,60 @@ namespace CleanArchitectureSample.Infrastructure.Domain
         IEnumerable<Expression<Func<T, bool>>> filters,
         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
         params Expression<Func<T, object>>[] includeProperties);
+
+        /// <summary>
+        /// The get all.
+        /// </summary>
+        /// <returns>The result.</returns>
+        IRepository<T> GetAll();
+
+        /// <summary>
+        /// The where.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>The result.</returns>
+        IRepository<T> Where(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// The where.
+        /// </summary>
+        /// <param name="filters">The filters.</param>
+        /// <returns>The result.</returns>
+        IRepository<T> Where(params Expression<Func<T, bool>>[] filters);
+
+        /// <summary>
+        /// The where.
+        /// </summary>
+        /// <param name="filters">The filters.</param>
+        /// <returns>The result.</returns>
+        IRepository<T> Where(IEnumerable<Expression<Func<T, bool>>> filters);
+
+        /// <summary>
+        /// The order by.
+        /// </summary>
+        /// <param name="keySelector">The key selector.</param>
+        /// <returns>The result.</returns>
+        IRepository<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector);
+
+        /// <summary>
+        /// The order by descending.
+        /// </summary>
+        /// <param name="keySelector">The key selector.</param>
+        /// <returns>The result.</returns>
+        IRepository<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector);
+
+        /// <summary>
+        /// The to list.
+        /// </summary>
+        /// <returns>The result.</returns>
+        IEnumerable<T> ToList();
+
+        /// <summary>
+        /// The to pages list.
+        /// </summary>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <returns>The result.</returns>
+        (IEnumerable<T>, int totalCount) ToPagesList(int pageIndex, int pageSize);
     }
 }

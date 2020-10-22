@@ -4,6 +4,10 @@ using System.Configuration;
 
 namespace CleanArchitectureSample.Persistence.EF
 {
+    /// <summary>
+    /// TestContext
+    /// </summary>
+    /// <remarks></remarks>
     public partial class TestContext : DbContext
     {
         public TestContext()

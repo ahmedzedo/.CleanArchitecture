@@ -127,7 +127,11 @@ namespace CleanArchitectureSample.Application.Packages.Services
 
             List<Expression<Func<Package, bool>>> filters = GetPackageSearchFilters(request);
 
-            (IEnumerable<Package> items, int totalCount) = await UnitOfWork.PackageRepository.GetPagedByFiltersAsync(request.PageIndex, request.PageSize, filters, o => o.OrderByDescending(p => p.Id));
+            // (IEnumerable<Package> items, int totalCount) = await UnitOfWork.PackageRepository.GetPagedByFiltersAsync(request.PageIndex, request.PageSize, filters, o => o.OrderByDescending(p => p.Id));
+            (IEnumerable<Package> items, int totalCount) =  UnitOfWork.PackageRepository.GetAll()
+                .Where(filters)
+                .OrderByDescending(p => p.Id)
+                .ToPagesList(request.PageIndex, request.PageSize);
 
             response = new SearchResponse<PackageIndexViewModel>
             {

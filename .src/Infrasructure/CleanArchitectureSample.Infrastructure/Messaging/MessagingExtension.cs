@@ -17,17 +17,17 @@ namespace CleanArchitectureSample.Infrastructure.Messaging
 
     public static class MessagingExtension
     {
-        public static Response<T> CreateNullRequestResponse<T>(this Request<T> request, string message)
-        {
-            var response = new Response<T>
-            {
-                Success = false,
-                Message = message
-            };
-            response.Errors.AddError("NullRequest", message);
+        //public static Response<T> CreateNullRequestResponse<T>(this Request<T> request, string message)
+        //{
+        //    var response = new Response<T>
+        //    {
+        //        Success = false,
+        //        Message = message
+        //    };
+        //    response.Errors.AddError("NullRequest", message);
 
-            return response;
-        }
+        //    return response;
+        //}
 
         public static Response<T> CreateFailedResponse<T>(this Response<T> response, ErrorTypes errorTypes, string message)
         {
@@ -52,16 +52,17 @@ namespace CleanArchitectureSample.Infrastructure.Messaging
 
             return response;
         }
-        public static SearchResponse<T> CreateNullRequestResponse<T>(this SearchRequest<T> request, string message)
-        {
-            var response = new SearchResponse<T>
-            {
-                Success = false,
-                Message = message
-            };
-            response.Errors.AddError("NullRequest", message);
 
-            return response;
-        }
+        //public static SearchResponse<T> CreateNullRequestResponse<T>(this SearchRequest<T> request, string message)
+        //{
+        //    var response = new SearchResponse<T>
+        //    {
+        //        Success = false,
+        //        Message = message
+        //    };
+        //    response.Errors.AddError("NullRequest", message);
+
+        //    return response;
+        //}
     }
 }
